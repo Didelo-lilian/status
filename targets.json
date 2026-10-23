@@ -1,3 +1,4 @@
 [
-  { "key": "hello", "name": "Hello page", "url": "https://hello.didelo.fr" }
+  { "key": "hello", "name": "Hello page", "url": "https://hello.didelo.fr" },
+  { "key": "ds", "name": "Design system", "url": "https://ds.didelo.fr" }
 ]
