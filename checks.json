@@ -1,1 +1,1 @@
-{"targets":{"hello":{"checks":[[1792714057,1,764],[1792720867,1,589]],"name":"Hello page","url":"https://hello.didelo.fr"}},"updated":1792720867}
+{"targets":{"hello":{"checks":[[1792714057,1,764],[1792720867,1,589],[1792723767,1,860]],"name":"Hello page","url":"https://hello.didelo.fr"},"ds":{"checks":[[1792723767,1,631]],"name":"Design system","url":"https://ds.didelo.fr"}},"updated":1792723767}
