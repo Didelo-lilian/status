@@ -1,0 +1,62 @@
+name: Probe
+
+# Probes the site from GitHub, outside the server, and publishes the result as a static page.
+# The history is one file on the `data` branch, written through the API so GitHub signs the commits.
+# The run fails after publishing when a target is down, which emails the person who last edited the schedule.
+# Scheduled workflows are paused after 60 days without activity on a public repository.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: probe
+  cancel-in-progress: false
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Load the history
+        id: history
+        run: |
+          if gh api "repos/$GITHUB_REPOSITORY/contents/checks.json?ref=data" > meta.json 2>/dev/null; then
+            jq -r .content meta.json | base64 -d > checks.json
+            echo "sha=$(jq -r .sha meta.json)" >> "$GITHUB_OUTPUT"
+          fi
+      - id: probe
+        run: python3 probe.py checks.json targets.json
+      - name: Save the history
+        env:
+          SHA: ${{ steps.history.outputs.sha }}
+        run: |
+          if ! gh api "repos/$GITHUB_REPOSITORY/branches/data" --silent 2>/dev/null; then
+            main=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+            gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref=refs/heads/data -f sha="$main" --silent
+          fi
+          args=(-X PUT "repos/$GITHUB_REPOSITORY/contents/checks.json" -f message="chore(data): record a probe" -f branch=data -f content="$(base64 -w0 checks.json)")
+          [ -z "$SHA" ] || args+=(-f sha="$SHA")
+          gh api "${args[@]}" --silent
+      - name: Build the page
+        run: |
+          mkdir _site
+          cp site/* checks.json _site/
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v5
+      - if: steps.probe.outputs.down == 'true'
+        run: echo "::error::A target is down" && exit 1
