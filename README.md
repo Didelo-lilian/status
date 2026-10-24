@@ -8,6 +8,11 @@ Public status page of my [personal platform](https://github.com/Didelo-lilian/in
 
 It runs on GitHub, not on my server: a status page hosted next to the thing it watches goes down with it. See [ADR 0001](docs/adr/0001-status-page-outside-the-server.md).
 
+## Two views
+
+- **This page** answers "is it up?". It is probed from GitHub, so it stays up when the server does not.
+- **[metrics.didelo.fr](https://metrics.didelo.fr)** shows the global load (CPU, memory), response times and certificate expiry, from Prometheus ([infra ADR 0014](https://github.com/Didelo-lilian/infra/blob/main/docs/adr/0014-a-public-metrics-dashboard-from-grafana.md)). It runs on the server it watches, so it goes down with it: if it does not answer, the server is down. The status page links to it with that note.
+
 ## How it works
 
 ```mermaid
