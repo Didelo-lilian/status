@@ -1,4 +1,5 @@
 [
   { "key": "hello", "name": "Hello page", "url": "https://hello.didelo.fr" },
-  { "key": "ds", "name": "Design system", "url": "https://ds.didelo.fr" }
+  { "key": "ds", "name": "Design system", "url": "https://ds.didelo.fr" },
+  { "key": "game", "name": "Sémaphore game", "url": "https://play.didelo.fr" }
 ]
