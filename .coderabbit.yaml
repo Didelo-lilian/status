@@ -10,9 +10,11 @@ reviews:
     max_merge_risk: low
   path_instructions:
     - path: "probe.py"
-      instructions: "The probe runs on a schedule in CI. Flag network calls without a timeout, and anything that writes secrets or full response bodies to the public site. If the PR changes what is probed or how the page is built and published, the Mermaid diagrams in the README must be updated in the same PR."
+      instructions: "The probe runs on a schedule in CI. Flag network calls without a timeout, and anything that writes secrets or full response bodies to the public site."
     - path: "site/**"
       instructions: "Published publicly on GitHub Pages: flag anything that is not meant to be public."
+    - path: "**"
+      instructions: "If the PR changes what is probed or how the status page is built and published, check that the Mermaid diagrams in the README were updated in the same PR."
 knowledge_base:
   linked_repositories:
     - repository: Didelo-lilian/semaphore
