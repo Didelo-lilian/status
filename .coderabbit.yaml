@@ -8,6 +8,7 @@ reviews:
   auto_approvals:
     enabled: true
     max_merge_risk: low
+    min_blocking_severity: major
   path_instructions:
     - path: "probe.py"
       instructions: "The probe runs on a schedule in CI. Flag network calls without a timeout, and anything that writes secrets or full response bodies to the public site."
