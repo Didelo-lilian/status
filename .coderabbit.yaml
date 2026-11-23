@@ -1,7 +1,23 @@
 reviews:
   poem: false
+  high_level_summary_in_walkthrough: true
   auto_review:
-    ignore_usernames:
-      - dependabot[bot]
+    auto_pause_after_reviewed_commits: 0
     ignore_title_keywords:
       - "chore(main): release"
+  auto_approvals:
+    enabled: true
+    max_merge_risk: low
+  path_instructions:
+    - path: "probe.py"
+      instructions: "The probe runs on a schedule in CI. Flag network calls without a timeout, and anything that writes secrets or full response bodies to the public site."
+    - path: "site/**"
+      instructions: "Published publicly on GitHub Pages: flag anything that is not meant to be public."
+    - path: "README.md"
+      instructions: "When the PR changes what is probed or how the status page is built and published, the Mermaid diagrams must be updated in this same PR."
+knowledge_base:
+  linked_repositories:
+    - repository: Didelo-lilian/semaphore
+      instructions: "The game probed by the status page. Flag changes to probed URLs or health endpoints that this repo must follow."
+    - repository: Didelo-lilian/infra
+      instructions: "Hosts the probed services and their routes. Flag probe targets that no longer match them."
